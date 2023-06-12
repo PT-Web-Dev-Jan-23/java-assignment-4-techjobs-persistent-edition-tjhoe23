@@ -60,6 +60,8 @@ public class HomeController {
         if (errors.hasErrors()) {
             model.addAttribute("title", "Add Job");
             model.addAttribute(newJob);
+            List employers = (List<Employer>) employerRepository.findAll();
+            model.addAttribute("employers", employers);
             return "add";
         }
 
