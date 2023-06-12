@@ -44,7 +44,9 @@ public class HomeController {
     public String displayAddJobForm(Model model) {
         model.addAttribute("title", "Add Job");
         model.addAttribute(new Job());
-        model.addAttribute("employers", employerRepository.findAll());
+
+        List employers = (List<Employer>) employerRepository.findAll();
+        model.addAttribute("employers", employers);
 
         List skills = (List<Skill>) skillRepository.findAll();
         model.addAttribute("skills", skills);
