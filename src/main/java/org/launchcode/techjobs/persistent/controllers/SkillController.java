@@ -1,7 +1,7 @@
 package org.launchcode.techjobs.persistent.controllers;
 
-import org.launchcode.techjobs.persistent.models.Employer;
-import org.launchcode.techjobs.persistent.models.data.EmployerRepository;
+import org.launchcode.techjobs.persistent.models.Skill;
+import org.launchcode.techjobs.persistent.models.data.SkillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,46 +12,43 @@ import javax.validation.Valid;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("employers")
-public class EmployerController {
+@RequestMapping("skills")
+public class SkillController {
 
     @Autowired
-    private EmployerRepository employerRepository;
+    private SkillRepository skillRepository;
 
     @GetMapping("")
     public String index(Model model) {
         //list of employers in the database
-        model.addAttribute("title", "All Employers");
-        model.addAttribute("Employers", employerRepository.findAll());
+        model.addAttribute("title", "All Skills");
+        model.addAttribute("Skills", skillRepository.findAll());
         //use template employers/index
-        return "employers";
+        return "skills/index";
 
     }
 
     @GetMapping("add")
-    public String displayAddEmployerForm(Model model) {
-        model.addAttribute(new Employer());
-        return "employers/add";
+    public String displayAddSkillForm(Model model) {
+        model.addAttribute(new Skill());
+        return "skills/add";
     }
 
     @PostMapping("add")
-    public String processAddEmployerForm(@ModelAttribute @Valid Employer newEmployer,
+    public String processAddSkillForm(@ModelAttribute @Valid Skill newSkill,
                                          Errors errors, Model model) {
 
         if (errors.hasErrors()) {
-            model.addAttribute("title", "Create Employer");
-            model.addAttribute(new Employer());
-            return "employers/add";
+            model.addAttribute("title", "Create Skill");
+            return "skills/add";
         }
 
-        employerRepository.save(newEmployer);
-        return "employers/add";
+        skillRepository.save(newSkill);
+        return "redirect:";
     }
 
-    //Add Employer posts to database, error on /employers/add
-
-    @GetMapping("view/{employerId}")
-    public String displayViewEmployer(Model model, @PathVariable int employerId) {
+    @GetMapping("view/{skillId}")
+    public String displayViewSkill(Model model, @PathVariable int skillId) {
 
         //replace optemployer = null with .findById() and right argument
         //to look for given employer object from data layer
@@ -64,16 +61,14 @@ public class EmployerController {
         It will make use of that employer object’s id field to grab the correct information from employerRepository.
         optEmployer is currently initialized to null. Replace this using the .findById() method with the right argument to look for the given employer object from the data layer.*/
 
-        Optional<Employer> result = employerRepository.findById(employerId);
+        Optional<Skill> result = skillRepository.findById(skillId);
 
-        if (result.isEmpty()) {
-            model.addAttribute("title", "Invalid Employer iD " + employerId);
-        } else {
-            Employer employer = result.get();
-            model.addAttribute("title", employer.getId());
-            model.addAttribute("employer", employer);
+        if (result.isPresent()) {
+            Skill skill = result.get();
+            model.addAttribute("skill", skill);
         }
-            return "view/{employerId}";
-        }
+        return "view/{skillId}";
     }
+}
+
 
