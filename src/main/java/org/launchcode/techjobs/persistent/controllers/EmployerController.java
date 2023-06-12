@@ -9,6 +9,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -20,12 +21,9 @@ public class EmployerController {
 
     @GetMapping("")
     public String index(Model model) {
-        //list of employers in the database
         model.addAttribute("title", "All Employers");
-        model.addAttribute("Employers", employerRepository.findAll());
-        //use template employers/index
+        model.addAttribute("employers", employerRepository.findAll());
         return "employers/index";
-
     }
 
     @GetMapping("add")
@@ -37,7 +35,6 @@ public class EmployerController {
     @PostMapping("add")
     public String processAddEmployerForm(@ModelAttribute @Valid Employer newEmployer,
                                          Errors errors, Model model) {
-
         if (errors.hasErrors()) {
             model.addAttribute("title", "Create Employer");
             model.addAttribute(new Employer());
@@ -48,8 +45,6 @@ public class EmployerController {
         return "redirect:";
     }
 
-    //Add Employer posts to database, error on /employers/add
-
     @GetMapping("view/{employerId}")
     public String displayViewEmployer(Model model, @PathVariable int employerId) {
 
@@ -58,7 +53,7 @@ public class EmployerController {
         if (result.isPresent()) {
             Employer employer = result.get();
             model.addAttribute("employer", employer);
-            return "employers/view";
+            return "view";
         }
             return "redirect:";
         }

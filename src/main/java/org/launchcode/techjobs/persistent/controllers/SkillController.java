@@ -20,12 +20,9 @@ public class SkillController {
 
     @GetMapping("")
     public String index(Model model) {
-        //list of employers in the database
         model.addAttribute("title", "All Skills");
-        model.addAttribute("Skills", skillRepository.findAll());
-        //use template employers/index
+        model.addAttribute("skills", skillRepository.findAll());
         return "skills/index";
-
     }
 
     @GetMapping("add")
@@ -47,7 +44,7 @@ public class SkillController {
         return "redirect:";
     }
 
-    @GetMapping("view/{skillId}")
+    @GetMapping("view/skills")
     public String displayViewSkill(Model model, @PathVariable int skillId) {
 
         Optional<Skill> result = skillRepository.findById(skillId);
